@@ -3,9 +3,9 @@ dotenv.config();
 
 const env = process.env;
 
-export const getEnv = <T extends { [key: string]: any }>(
+export const getEnv = <T>(
   key: keyof T,
-  number?: true
+  number: true | false = false
 ): T[keyof T] => {
   const value = env[key as string];
 
@@ -18,8 +18,8 @@ export const getEnv = <T extends { [key: string]: any }>(
   }
 
   const numberValue = Number(value);
-  if (isNaN(numberValue)) {
-    throw new Error(`${value} cannot be cast to number`);
+  if (Number.isNaN(numberValue)) {
+    throw new TypeError(`${value} cannot be cast to number`);
   }
   return numberValue as T[keyof T];
 };
