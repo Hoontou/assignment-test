@@ -1,5 +1,5 @@
 import { Sequelize } from 'sequelize';
-import { getEnv } from './getEnv';
+import { getEnv } from './get-env';
 
 interface MysqlEnv {
   MYSQL_DATABASE: string;
@@ -16,6 +16,6 @@ export const sequelize = new Sequelize(
   {
     host: getEnv<MysqlEnv>('MYSQL_HOST'),
     dialect: 'mysql',
-    port: Number(getEnv<MysqlEnv>('MYSQL_PORT')),
+    port: Number(getEnv<MysqlEnv>('MYSQL_PORT', true)),
   }
 );
