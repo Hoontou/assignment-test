@@ -1,15 +1,21 @@
 import { Sequelize } from 'sequelize';
-import dotenv from 'dotenv';
+import { getEnv } from './getEnv';
 
-dotenv.config();
+interface MysqlEnv {
+  MYSQL_DATABASE: string;
+  MYSQL_USER: string;
+  MYSQL_PASSWORD: string;
+  MYSQL_HOST: string;
+  MYSQL_PORT: string;
+}
 
 export const sequelize = new Sequelize(
-  process.env.MYSQL_DATABASE as string,
-  process.env.MYSQL_USER as string,
-  process.env.MYSQL_PASSWORD as string,
+  getEnv<MysqlEnv>('MYSQL_DATABASE'),
+  getEnv<MysqlEnv>('MYSQL_USER'),
+  getEnv<MysqlEnv>('MYSQL_PASSWORD'),
   {
-    host: process.env.MYSQL_HOST,
+    host: getEnv<MysqlEnv>('MYSQL_HOST'),
     dialect: 'mysql',
-    port: Number(process.env.MYSQL_PORT),
+    port: Number(getEnv<MysqlEnv>('MYSQL_PORT')),
   }
 );
