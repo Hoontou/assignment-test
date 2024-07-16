@@ -1,11 +1,13 @@
 import { NextFunction, Request, Response } from 'express';
 import { OrderService } from './order.service';
+import { CustomController } from '../../common/custom-class';
 
-export class OrderController {
+export class OrderController extends CustomController {
   private static instance: OrderController;
   private orderService: OrderService;
 
   private constructor(orderService: OrderService) {
+    super();
     this.orderService = orderService;
   }
 
@@ -22,7 +24,7 @@ export class OrderController {
       const orders = await this.orderService.getAllOrders();
       res.status(200).json(orders);
     } catch (error) {
-      res.status(500).json({ message: 'Error fetching orders', error });
+      this.handleResponseError(res, error);
     }
   }
 
@@ -31,10 +33,7 @@ export class OrderController {
       const order = await this.orderService.getOne(Number(req.params.id));
       res.status(200).json(order);
     } catch (error) {
-      res.status(404).emit('error', error);
-      res.json({
-        message: `Error fetching order with ID ${req.params.id}`,
-      });
+      this.handleResponseError(res, error);
     }
   }
 }

@@ -1,3 +1,4 @@
+import { CustomService } from '../../common/custom-class';
 import {
   CustomError,
   InternalServerError,
@@ -7,14 +8,16 @@ import { CouponMetadata } from '../coupon/coupon-metadata.model';
 import { Coupon } from '../coupon/coupon.model';
 import { Order } from './order.model';
 
-export class OrderService {
+export class OrderService extends CustomService {
   private static instance: OrderService;
 
   private constructor(
     private orderModel: typeof Order,
     private couponModel: typeof Coupon,
     private couponMetadataModel: typeof CouponMetadata
-  ) {}
+  ) {
+    super();
+  }
 
   static getInstance(): OrderService {
     if (!OrderService.instance) {
@@ -28,13 +31,7 @@ export class OrderService {
       const orders = await this.orderModel.findAll();
       return orders;
     } catch (error) {
-      if (error instanceof CustomError) {
-        console.log(error);
-        throw error;
-      }
-
-      console.log('Error fetching orders:', error);
-      throw new InternalServerError('Error fetching orders');
+      this.handleError(error, 'Error fetching orders');
     }
   }
 
@@ -46,14 +43,7 @@ export class OrderService {
       }
       return order;
     } catch (error) {
-      if (error instanceof CustomError) {
-        console.log(error);
-        throw error;
-      }
-
-      const errMsg = `Error fetching order with ID ${id}:`;
-      console.log(errMsg, error);
-      throw new InternalServerError(errMsg);
+      this.handleError(error, `Error fetching order with ID ${id}`);
     }
   }
 }

@@ -28,9 +28,9 @@ export const httpLoggingInterceptor = (
 
   // 응답 데이터 저장
   const originalSend = res.send;
-  res.send = function (data) {
+  res.send = (data, ...args) => {
     res.locals.data = data;
-    return originalSend.apply(res, arguments);
+    return originalSend.apply(res, args);
   };
 
   res.on('finish', () => {
