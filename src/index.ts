@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import { sequelize } from './config/database';
 import { orderRouter } from './modules/order/order.router';
 import { couponRouter } from './modules/coupon/coupon.router';
+import { httpLoggingInterceptor } from './common/http-logging.middleware';
 dotenv.config();
 
 const app: Application = express();
@@ -10,6 +11,8 @@ const PORT = process.env.PORT ?? 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(httpLoggingInterceptor);
 
 app.use('/coupons', couponRouter);
 app.use('/orders', orderRouter);
