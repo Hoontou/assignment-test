@@ -17,6 +17,7 @@ export const sequelize = new Sequelize(
     host: getEnv<MysqlEnv>('MYSQL_HOST'),
     dialect: 'mysql',
     port: Number(getEnv<MysqlEnv>('MYSQL_PORT', true)),
+    logging: false,
   }
 );
 

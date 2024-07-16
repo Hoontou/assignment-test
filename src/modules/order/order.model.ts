@@ -7,7 +7,7 @@ import {
   ForeignKey,
 } from 'sequelize';
 import dayjs from 'dayjs';
-import { CouponMetadata } from '../coupon/coupon-metadata';
+import { CouponMetadata } from '../coupon/coupon-metadata.model';
 import { sequelize } from '../../config/database';
 
 export class Order extends Model<
