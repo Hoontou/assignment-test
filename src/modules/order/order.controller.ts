@@ -34,7 +34,6 @@ export class OrderController {
       res.status(404).emit('error', error);
       res.json({
         message: `Error fetching order with ID ${req.params.id}`,
-        error,
       });
     }
   }

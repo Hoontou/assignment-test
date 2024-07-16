@@ -6,40 +6,53 @@ export const httpLoggingInterceptor = (
   res: Response,
   next: NextFunction
 ) => {
-  const { method, originalUrl, headers, connection, body } = req;
+  const { method, originalUrl, body } = req;
   const now = Date.now();
   const parsedUrl = parse(originalUrl, true);
 
-  // 요청 로깅
-  console.log(`${method} ${parsedUrl.pathname}: Request received`);
+  // 구분선 및 요청 로깅
+  console.log(`\n--- Request Start -------------------------------------`);
+  console.log(`Request received: ${method} ${parsedUrl.pathname}`);
 
   // 쿼리 파라미터 로깅
   if (parsedUrl.query && Object.keys(parsedUrl.query).length > 0) {
-    console.debug(
+    console.log(
       `Query parameters: ${JSON.stringify(parsedUrl.query, null, 2)}`
     );
   }
 
   // 요청 바디 로깅
   if (Object.keys(body).length > 0) {
-    console.debug(`Request body: ${JSON.stringify(body, null, 2)}`);
+    console.log(`Request body: ${JSON.stringify(body, null, 2)}`);
   }
+
+  // 응답 데이터 저장
+  const originalSend = res.send;
+  res.send = function (data) {
+    res.locals.data = data;
+    return originalSend.apply(res, arguments);
+  };
 
   res.on('finish', () => {
     const { statusCode } = res;
 
-    // 응답 로깅
+    // 요청 처리 완료 구분선 및 응답 로깅
+    console.log(`\n--- Request Processed ------------------------------`);
     console.log(
-      `Response from ${method} ${parsedUrl.pathname} ${statusCode}: ${Date.now() - now}ms`
+      `Response from ${method} ${parsedUrl.pathname} ${statusCode}: ${
+        Date.now() - now
+      }ms`
     );
-    console.debug(`Response: ${JSON.stringify(res.locals, null, 2)}`);
+    console.log(`Response: ${JSON.stringify(res.locals.data, null, 2)}`);
+    console.log(`--- Request End ---------------------------------------\n`);
   });
 
   res.on('error', (err: any) => {
     const statusCode = res.statusCode ?? err.status ?? 500;
     const errorMessage = err.message;
 
-    // 에러 로깅
+    // 에러 발생 구분선 및 에러 로깅
+    console.error(`\n--- Error Occurred ---------------------------------`);
     console.error(
       `Error from ${method} ${parsedUrl.pathname} ${statusCode}: ${Date.now() - now}ms`
     );
