@@ -19,3 +19,6 @@ export const sequelize = new Sequelize(
     port: Number(getEnv<MysqlEnv>('MYSQL_PORT', true)),
   }
 );
+
+// https://www.zipy.ai/blog/sequelize-typescript-tutorial-with-example
+// https://sequelize.org/docs/v6/other-topics/typescript/
