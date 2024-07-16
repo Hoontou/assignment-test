@@ -1,3 +1,8 @@
+import {
+  CustomError,
+  InternalServerError,
+  NotFoundError,
+} from '../../common/custom-errors';
 import { CouponMetadata } from '../coupon/coupon-metadata.model';
 import { Coupon } from '../coupon/coupon.model';
 import { Order } from './order.model';
@@ -23,8 +28,13 @@ export class OrderService {
       const orders = await this.orderModel.findAll();
       return orders;
     } catch (error) {
+      if (error instanceof CustomError) {
+        console.log(error);
+        throw error;
+      }
+
       console.log('Error fetching orders:', error);
-      throw error;
+      throw new InternalServerError('Error fetching orders');
     }
   }
 
@@ -32,12 +42,18 @@ export class OrderService {
     try {
       const order = await this.orderModel.findByPk(id);
       if (!order) {
-        throw new Error(`Order with ID ${id} not found`);
+        throw new NotFoundError(`Order with ID ${id} not found`);
       }
       return order;
     } catch (error) {
-      console.log(`Error fetching order with ID ${id}:`, error);
-      throw error;
+      if (error instanceof CustomError) {
+        console.log(error);
+        throw error;
+      }
+
+      const errMsg = `Error fetching order with ID ${id}:`;
+      console.log(errMsg, error);
+      throw new InternalServerError(errMsg);
     }
   }
 }
