@@ -26,26 +26,38 @@ export const httpLoggingInterceptor = (
     console.log(`Request body: ${JSON.stringify(body, null, 2)}`);
   }
 
-  // 응답 데이터 저장
-  const originalSend = res.send;
-  res.send = (data, ...args) => {
-    res.locals.data = data;
-    return originalSend.apply(res, args);
-  };
+  // // 응답 데이터 저장
+  // const originalSend = res.send;
+  // res.send = (data, ...args) => {
+  //   res.locals.data = data;
+  //   return originalSend.apply(res, args);
+  // };
 
-  res.on('finish', () => {
-    const { statusCode } = res;
+  // res.on('finish', () => {
+  //   const { statusCode } = res;
 
-    // 요청 처리 완료 구분선 및 응답 로깅
+  //   // 요청 처리 완료 구분선 및 응답 로깅
+  //   console.log(`\n--- Request Processed ------------------------------`);
+  //   console.log(
+  //     `Response from ${method} ${parsedUrl.pathname} ${statusCode}: ${
+  //       Date.now() - now
+  //     }ms`
+  //   );
+  //   console.log(`Response: ${JSON.stringify(res.locals.data, null, 2)}`);
+  //   console.log(`--- Request End ---------------------------------------\n`);
+  // });
+
+  // res.json을 감싸서 응답 데이터를 로그에 출력
+  const originalJson = res.json;
+  res.json = function (data) {
     console.log(`\n--- Request Processed ------------------------------`);
     console.log(
-      `Response from ${method} ${parsedUrl.pathname} ${statusCode}: ${
-        Date.now() - now
-      }ms`
+      `Response from ${method} ${parsedUrl.pathname} ${res.statusCode}: ${Date.now() - now}ms`
     );
-    console.log(`Response: ${JSON.stringify(res.locals.data, null, 2)}`);
+    console.log(`Response: ${JSON.stringify(data, null, 2)}`);
     console.log(`--- Request End ---------------------------------------\n`);
-  });
+    return originalJson.call(this, data);
+  };
 
   res.on('error', (err: any) => {
     const statusCode = res.statusCode ?? err.status ?? 500;

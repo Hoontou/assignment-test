@@ -36,4 +36,13 @@ export class OrderController extends CustomController {
       this.handleResponseError(res, error);
     }
   }
+
+  async createOrder(req: Request, res: Response, next: NextFunction) {
+    try {
+      const order = await this.orderService.createOrder(req.body);
+      res.status(201).json(order);
+    } catch (error) {
+      this.handleResponseError(res, error);
+    }
+  }
 }

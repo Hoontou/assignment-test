@@ -10,16 +10,22 @@ import dayjs from 'dayjs';
 import { CouponMetadata } from '../coupon/coupon-metadata.model';
 import { sequelize } from '../../config/database';
 
+export enum OrderStatusEnum {
+  PENDING = 'pending',
+  SUCCEED = 'succeed',
+  FAILED = 'failed',
+}
+
 export class Order extends Model<
   InferAttributes<Order>,
   InferCreationAttributes<Order>
 > {
   declare id: CreationOptional<number>;
-  declare userId: string;
+  declare userId: number;
   declare couponMetadataId: ForeignKey<CouponMetadata['id']> | null;
   declare orderDate: Date;
   declare amount: number;
-  declare status: 'pending' | 'succeed' | 'failed';
+  declare status: OrderStatusEnum;
 
   getFormattedOrderDate(): string {
     return dayjs(this.orderDate).format('YYYY-MM-DD');
@@ -55,7 +61,7 @@ Order.init(
       allowNull: false,
     },
     status: {
-      type: DataTypes.ENUM('pending', 'succeed', 'failed'),
+      type: DataTypes.ENUM(...Object.values(OrderStatusEnum)),
       allowNull: false,
     },
   },

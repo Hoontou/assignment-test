@@ -12,12 +12,6 @@ export class CustomError extends Error {
     this.code = code;
     this.statusCode = statusCode;
   }
-
-  // log() {
-  //   console.error(
-  //     `Error: ${this.message}, Code: ${this.code}, Status: ${this.statusCode}`
-  //   );
-  // }
 }
 
 export class NotFoundError extends CustomError {

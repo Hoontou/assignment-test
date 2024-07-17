@@ -1,27 +1,30 @@
+import dayjs from 'dayjs';
 import { CustomService } from '../../common/custom-class';
 import {
   CustomError,
   InternalServerError,
   NotFoundError,
 } from '../../common/custom-errors';
+import { sequelize } from '../../config/database';
 import { CouponMetadata } from '../coupon/coupon-metadata.model';
 import { Coupon } from '../coupon/coupon.model';
-import { Order } from './order.model';
+import { Order, OrderStatusEnum } from './order.model';
+import { CouponService } from '../coupon/coupon.service';
 
 export class OrderService extends CustomService {
   private static instance: OrderService;
 
   private constructor(
     private orderModel: typeof Order,
-    private couponModel: typeof Coupon,
-    private couponMetadataModel: typeof CouponMetadata
+    private couponService: CouponService
   ) {
     super();
   }
 
   static getInstance(): OrderService {
     if (!OrderService.instance) {
-      OrderService.instance = new OrderService(Order, Coupon, CouponMetadata);
+      const couponService = CouponService.getInstance();
+      OrderService.instance = new OrderService(Order, couponService);
     }
     return OrderService.instance;
   }
@@ -44,6 +47,58 @@ export class OrderService extends CustomService {
       return order;
     } catch (error) {
       this.handleError(error, `Error fetching order with ID ${id}`);
+    }
+  }
+
+  async createOrder(data: {
+    userId: number;
+    amount: number;
+    name: string;
+    expire: number;
+  }) {
+    const { userId, amount } = data;
+
+    const newOrder = await Order.create({
+      userId,
+      amount,
+      status: OrderStatusEnum.PENDING,
+      orderDate: new Date(),
+    })
+      .then((res) => {
+        console.log(`order created, id: ${res.id}`);
+        return res;
+      })
+      .catch((error) => {
+        console.log(error);
+        throw new InternalServerError(`Error while create new order`);
+      });
+    const transaction = await sequelize.transaction();
+
+    try {
+      const { couponMetadata } = await this.couponService.createCoupons({
+        transaction,
+        orderId: newOrder.id,
+        ...data,
+      });
+
+      await newOrder.update(
+        {
+          couponMetadataId: couponMetadata.id,
+          status: OrderStatusEnum.SUCCEED,
+        },
+        { transaction }
+      );
+
+      await transaction.commit();
+
+      return { newOrder };
+    } catch (error) {
+      await transaction.rollback();
+      await newOrder.update({ status: OrderStatusEnum.FAILED });
+
+      console.log(`Error while create new coupons, order id: ${newOrder.id}`);
+      console.log(error);
+      return { newOrder };
     }
   }
 }

@@ -7,6 +7,12 @@ import {
 } from 'sequelize';
 import { sequelize } from '../../config/database';
 
+export enum CouponStatusEnum {
+  AVAILABLE = 'available',
+  UNAVAILABLE = 'unavailable',
+  USED = 'used',
+}
+
 export class Coupon extends Model<
   InferAttributes<Coupon>,
   InferCreationAttributes<Coupon>
@@ -14,7 +20,7 @@ export class Coupon extends Model<
   declare id: CreationOptional<number>;
   declare pin: string;
   declare couponMetadataId: number;
-  declare status: 'available' | 'unavailable' | 'used';
+  declare status: CouponStatusEnum;
   declare orderId: number;
   declare usedAt: Date | null;
 }
@@ -35,7 +41,7 @@ Coupon.init(
       allowNull: false,
     },
     status: {
-      type: DataTypes.ENUM('available', 'unavailable', 'used'),
+      type: DataTypes.ENUM(...Object.values(CouponStatusEnum)),
       allowNull: false,
     },
     orderId: {
