@@ -1,11 +1,13 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { CouponService } from './coupon.service';
+import { CustomController } from '../../common/custom-class';
 
-export class CouponController {
+export class CouponController extends CustomController {
   private static instance: CouponController;
   private couponService: CouponService;
 
   private constructor(couponService: CouponService) {
+    super();
     this.couponService = couponService;
   }
 
@@ -15,5 +17,14 @@ export class CouponController {
       CouponController.instance = new CouponController(couponService);
     }
     return CouponController.instance;
+  }
+
+  async getCouponById(req: Request, res: Response, next: NextFunction) {
+    try {
+      const coupon = await this.couponService.getOne(Number(req.params.id));
+      res.status(200).json(coupon);
+    } catch (error) {
+      this.handleResponseError(res, error);
+    }
   }
 }

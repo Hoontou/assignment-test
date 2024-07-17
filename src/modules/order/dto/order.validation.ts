@@ -1,4 +1,4 @@
-import { body } from 'express-validator';
+import { body, param } from 'express-validator';
 import { handleValidationError } from '../../../common/custom-errors';
 
 export const validateCreateOrder = [
@@ -18,5 +18,13 @@ export const validateCreateOrder = [
     .isInt({ min: 1 })
     .notEmpty()
     .withMessage('Expire must be at least 1 and not empty'),
+  handleValidationError,
+];
+
+export const validateGetOrderById = [
+  param('id')
+    .isInt({ min: 1 })
+    .notEmpty()
+    .withMessage('ID parameter must be a positive integer'),
   handleValidationError,
 ];

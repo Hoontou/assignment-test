@@ -40,10 +40,18 @@ export class OrderService extends CustomService {
 
   async getOne(id: number) {
     try {
-      const order = await this.orderModel.findByPk(id);
+      const order = await this.orderModel.findByPk(id, {
+        include: [
+          {
+            model: CouponMetadata,
+            as: 'couponMetadata',
+          },
+        ],
+      });
       if (!order) {
         throw new NotFoundError(`Order with ID ${id} not found`);
       }
+      console.log(order);
       return order;
     } catch (error) {
       this.handleError(error, `Error fetching order with ID ${id}`);
@@ -74,7 +82,7 @@ export class OrderService extends CustomService {
     const transaction = await sequelize.transaction();
 
     try {
-      const { couponMetadata } = await this.couponService.createCoupons({
+      await this.couponService.createCoupons({
         transaction,
         orderId: newOrder.id,
         ...data,
@@ -83,7 +91,6 @@ export class OrderService extends CustomService {
       //TODO 여기둘까, 트랜잭션 커밋 밑에둘까
       await newOrder.update(
         {
-          couponMetadataId: couponMetadata.id,
           status: OrderStatusEnum.SUCCEED,
         },
         { transaction }

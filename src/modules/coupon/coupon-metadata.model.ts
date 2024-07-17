@@ -4,15 +4,18 @@ import {
   CreationOptional,
   InferAttributes,
   InferCreationAttributes,
+  ForeignKey,
 } from 'sequelize';
 import dayjs from 'dayjs';
 import { sequelize } from '../../config/database';
+import { Order } from '../order/order.model';
 
 export class CouponMetadata extends Model<
   InferAttributes<CouponMetadata>,
   InferCreationAttributes<CouponMetadata>
 > {
   declare id: CreationOptional<number>;
+  declare orderId: ForeignKey<Order['id']>;
   declare name: string;
   declare expiresAt: Date;
   declare createdAt: CreationOptional<Date>;
@@ -32,6 +35,14 @@ CouponMetadata.init(
       type: DataTypes.INTEGER.UNSIGNED,
       primaryKey: true,
       autoIncrement: true,
+    },
+    orderId: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: false,
+      references: {
+        model: Order,
+        key: 'id',
+      },
     },
     name: {
       type: DataTypes.STRING(255),
