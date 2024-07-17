@@ -22,6 +22,8 @@ yarn install
 
 ### 3. 서버 start
 
+mysql start 기다린 후,
+
 ```
 yarn dev
 ```
@@ -34,7 +36,7 @@ Connection has been established successfully.
 All models were synchronized successfully.
 ```
 
-## API 상세
+## API 목록
 
 ### 1. 주문 조회 API
 
@@ -103,3 +105,30 @@ action: markCouponAsUnavailable(1)
 #### (localhost:3000/coupons/unavailable/order/:orderId)
 
 action: markCouponsAsUnavailableByOrderId(1)
+
+## 테이블 목록
+
+#### order
+
+- id
+- userId: number;
+- orderDate: Date;
+- amount: number;
+- status: 'pending'|'succeed'|'failed';
+
+#### couponMetadata
+
+- id
+- orderId: number; (FK)
+- name: string;
+- expiresAt: Date;
+- createdAt: Date;
+
+#### coupon
+
+- id
+- pin: string;
+- couponMetadataId: number; (not FK)
+- orderId: number; (not FK)
+- status: 'available' | 'unavailable' | 'used';
+- usedAt: Date | null;
