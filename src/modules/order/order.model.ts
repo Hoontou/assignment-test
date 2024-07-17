@@ -23,7 +23,7 @@ export class Order extends Model<
   declare id: CreationOptional<number>;
   declare userId: number;
   declare couponMetadataId: ForeignKey<CouponMetadata['id']> | null;
-  declare orderDate: Date;
+  declare orderDate: CreationOptional<Date>;
   declare amount: number;
   declare status: OrderStatusEnum;
 
@@ -40,7 +40,7 @@ Order.init(
       autoIncrement: true,
     },
     userId: {
-      type: DataTypes.STRING(255),
+      type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
     },
     couponMetadataId: {
@@ -57,7 +57,7 @@ Order.init(
       defaultValue: DataTypes.NOW,
     },
     amount: {
-      type: DataTypes.DECIMAL(10, 2),
+      type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
     },
     status: {

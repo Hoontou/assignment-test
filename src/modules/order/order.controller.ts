@@ -39,8 +39,8 @@ export class OrderController extends CustomController {
 
   async createOrder(req: Request, res: Response, next: NextFunction) {
     try {
-      const order = await this.orderService.createOrder(req.body);
-      res.status(201).json(order);
+      const { newOrderId } = await this.orderService.createOrder(req.body);
+      res.status(201).json({ newOrderId });
     } catch (error) {
       this.handleResponseError(res, error);
     }

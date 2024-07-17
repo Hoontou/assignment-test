@@ -3,7 +3,7 @@ import { handleValidationError } from '../../../common/custom-errors';
 
 export const validateCreateOrder = [
   body('userId')
-    .isInt()
+    .isInt({ min: 1 })
     .notEmpty()
     .withMessage('User ID must be an integer and not empty'),
   body('amount')

@@ -27,6 +27,7 @@ export class CouponService {
     expire: number;
   }) {
     const { transaction, orderId, amount, name, expire } = data;
+
     const couponMetadata = await CouponMetadata.create(
       {
         name,
@@ -43,6 +44,7 @@ export class CouponService {
     }));
 
     await Coupon.bulkCreate(newCoupons, { transaction });
+    console.log(`* coupons created, amount: ${amount}`);
 
     return { couponMetadata };
   }

@@ -32,9 +32,11 @@ Coupon.init(
       primaryKey: true,
       autoIncrement: true,
     },
+    //TODO 지금은 uniqe하지 않음
     pin: {
       type: DataTypes.STRING(255),
-      primaryKey: true,
+      allowNull: false,
+      // unique: true
     },
     couponMetadataId: {
       type: DataTypes.INTEGER.UNSIGNED,

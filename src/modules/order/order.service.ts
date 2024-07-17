@@ -55,17 +55,16 @@ export class OrderService extends CustomService {
     amount: number;
     name: string;
     expire: number;
-  }) {
+  }): Promise<{ newOrderId: number }> {
     const { userId, amount } = data;
 
     const newOrder = await Order.create({
       userId,
       amount,
       status: OrderStatusEnum.PENDING,
-      orderDate: new Date(),
     })
       .then((res) => {
-        console.log(`order created, id: ${res.id}`);
+        console.log(`* order created, id: ${res.id}`);
         return res;
       })
       .catch((error) => {
@@ -81,6 +80,7 @@ export class OrderService extends CustomService {
         ...data,
       });
 
+      //TODO 여기둘까, 트랜잭션 커밋 밑에둘까
       await newOrder.update(
         {
           couponMetadataId: couponMetadata.id,
@@ -90,15 +90,17 @@ export class OrderService extends CustomService {
       );
 
       await transaction.commit();
-
-      return { newOrder };
+      console.log('* order creation succeed');
     } catch (error) {
       await transaction.rollback();
       await newOrder.update({ status: OrderStatusEnum.FAILED });
 
       console.log(`Error while create new coupons, order id: ${newOrder.id}`);
       console.log(error);
-      return { newOrder };
+    } finally {
+      console.log('* newOrder');
+      console.log(newOrder.dataValues);
+      return { newOrderId: newOrder.id };
     }
   }
 }
