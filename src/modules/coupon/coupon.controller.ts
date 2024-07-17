@@ -27,4 +27,19 @@ export class CouponController extends CustomController {
       this.handleResponseError(res, error);
     }
   }
+
+  async markCouponAsUnavailable(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const { couponId } = await this.couponService.markCouponAsUnavailable(
+        Number(req.params.id)
+      );
+      res.status(200).json({ couponId });
+    } catch (error) {
+      this.handleResponseError(res, error);
+    }
+  }
 }

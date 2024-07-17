@@ -4,10 +4,8 @@ import {
   CreationOptional,
   InferAttributes,
   InferCreationAttributes,
-  ForeignKey,
 } from 'sequelize';
 import dayjs from 'dayjs';
-import { CouponMetadata } from '../coupon/coupon-metadata.model';
 import { sequelize } from '../../config/database';
 
 export enum OrderStatusEnum {

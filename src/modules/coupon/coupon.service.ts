@@ -39,7 +39,7 @@ export class CouponService extends CustomService {
       }
 
       const couponDto = new GetOneCouponResDto(coupon, couponMetadata);
-      console.log(`Coupon ${id}`);
+      console.log(`* Coupon ${id} retrieved`);
       console.log(couponDto);
       return couponDto;
     } catch (error) {
@@ -76,5 +76,34 @@ export class CouponService extends CustomService {
     console.log(`* coupons created, amount: ${amount}`);
 
     return { couponMetadata };
+  }
+
+  async markCouponAsUnavailable(id: number): Promise<{ couponId: number }> {
+    try {
+      const coupon = await this.couponModel.findByPk(id);
+      if (!coupon) {
+        throw new NotFoundError(`Coupon with ID ${id} not found`);
+      }
+      coupon.status = CouponStatusEnum.UNAVAILABLE;
+      await coupon.save();
+
+      console.log(`* Coupon ${id} marked as unavailable`);
+      return { couponId: coupon.id };
+    } catch (error) {
+      throw this.handleError(
+        error,
+        `Error while marking Coupon with ID ${id} as unavailable`
+      );
+    }
+  }
+
+  async getCouponsByOrderId(orderId: number) {
+    const coupons = await this.couponModel.findAll({
+      where: { orderId },
+    });
+
+    console.log(`* Coupons for order ID ${orderId} retrieved`);
+    console.log(`catched coupons length: ${coupons.length}`);
+    return { coupons };
   }
 }

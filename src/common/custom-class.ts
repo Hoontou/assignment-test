@@ -18,10 +18,10 @@ export class CustomService extends SingletonClass {
   protected handleError(error: unknown | CustomError, errorMessage: string) {
     if (error instanceof CustomError) {
       console.log(error);
-      throw error;
+      return error;
     }
 
     console.log(errorMessage, error);
-    throw new InternalServerError(errorMessage);
+    return new InternalServerError(errorMessage);
   }
 }

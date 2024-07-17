@@ -1,13 +1,11 @@
-import dayjs from 'dayjs';
 import { CustomService } from '../../common/custom-class';
 import {
-  CustomError,
+  BadRequestError,
   InternalServerError,
   NotFoundError,
 } from '../../common/custom-errors';
 import { sequelize } from '../../config/database';
 import { CouponMetadata } from '../coupon/coupon-metadata.model';
-import { Coupon } from '../coupon/coupon.model';
 import { Order, OrderStatusEnum } from './order.model';
 import { CouponService } from '../coupon/coupon.service';
 import { GetOneOrderResDto } from './dto/order.dto';
@@ -35,7 +33,7 @@ export class OrderService extends CustomService {
       const orders = await this.orderModel.findAll();
       return orders;
     } catch (error) {
-      this.handleError(error, 'Error fetching orders');
+      throw this.handleError(error, 'Error fetching orders');
     }
   }
 
@@ -54,11 +52,46 @@ export class OrderService extends CustomService {
       }
 
       const orderDto = new GetOneOrderResDto(order);
-      console.log(`Order ${id}`);
+      console.log(`* Order ${id} retrieved`);
       console.log(orderDto);
       return orderDto;
     } catch (error) {
-      this.handleError(error, `Error fetching order with ID ${id}`);
+      throw this.handleError(error, `Error fetching order with ID ${id}`);
+    }
+  }
+
+  async getOrderWithCoupons(orderId: number) {
+    try {
+      const order = await this.orderModel.findByPk(orderId, {
+        include: [
+          {
+            model: CouponMetadata,
+            as: 'couponMetadata',
+          },
+        ],
+      });
+
+      if (!order) {
+        throw new NotFoundError(`Order with ID ${orderId} not found`);
+      }
+
+      const orderDto = new GetOneOrderResDto(order);
+      console.log(`* Order ${orderId} retrieved`);
+      console.log(orderDto);
+
+      if (order.status !== OrderStatusEnum.SUCCEED) {
+        throw new BadRequestError(
+          `Order ${orderId}'s status is ${order.status}, cannot get coupons.`
+        );
+      }
+
+      const coupons = await this.couponService.getCouponsByOrderId(orderId);
+      return { order: orderDto, coupons };
+    } catch (error) {
+      throw this.handleError(
+        error,
+        `Error fetching order with coupons for order ID ${orderId}`
+      );
     }
   }
 

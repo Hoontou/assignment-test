@@ -20,16 +20,16 @@ export const httpLoggingInterceptor = (
       `Query parameters: ${JSON.stringify(parsedUrl.query, null, 2)}`
     );
   }
-
   // 요청 바디 로깅
   if (Object.keys(body).length > 0) {
     console.log(`Request body: ${JSON.stringify(body, null, 2)}`);
   }
+  console.log(`\n--- processing start --------------------------`);
 
   // res.json을 감싸서 응답 데이터를 로그에 출력
   const originalJson = res.json;
   res.json = function (data) {
-    console.log(`\n--- Request Processed ------------------------------`);
+    console.log(`\n--- processing finished -----------------------`);
     console.log(
       `Response from ${method} ${parsedUrl.pathname} ${res.statusCode}: ${Date.now() - now}ms`
     );

@@ -45,4 +45,15 @@ export class OrderController extends CustomController {
       this.handleResponseError(res, error);
     }
   }
+
+  async getOrderWithCoupons(req: Request, res: Response, next: NextFunction) {
+    try {
+      const result = await this.orderService.getOrderWithCoupons(
+        Number(req.params.id)
+      );
+      res.status(200).json(result);
+    } catch (error) {
+      this.handleResponseError(res, error);
+    }
+  }
 }

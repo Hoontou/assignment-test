@@ -23,17 +23,18 @@ app.listen(PORT, async () => {
   console.log(`server up ${PORT}`);
 
   try {
-    await sequelize.authenticate();
+    await sequelize.authenticate().then(() => {
+      //TODO 참조설정 다른곳으로 빼내기
+      Order.hasOne(CouponMetadata, {
+        foreignKey: 'orderId',
+        as: 'couponMetadata',
+      });
+      CouponMetadata.belongsTo(Order, {
+        foreignKey: 'orderId',
+        as: 'order',
+      });
+    });
     console.log('Connection has been established successfully.');
-
-    Order.hasOne(CouponMetadata, {
-      foreignKey: 'orderId',
-      as: 'couponMetadata',
-    });
-    CouponMetadata.belongsTo(Order, {
-      foreignKey: 'orderId',
-      as: 'order',
-    });
 
     await sequelize
       .sync()

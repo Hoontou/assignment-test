@@ -23,4 +23,9 @@ router.post('/', validateCreateOrder, (req, res, next) =>
   orderController.createOrder(req, res, next)
 );
 
+/** Get order with coupons by order ID */
+router.get('/:id/coupons', validateGetOrderById, (req, res, next) =>
+  orderController.getOrderWithCoupons(req, res, next)
+);
+
 export const orderRouter: Router = router;

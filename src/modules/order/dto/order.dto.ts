@@ -2,6 +2,7 @@ import {
   CouponMetadata,
   ICouponMetadataDto,
 } from '../../coupon/coupon-metadata.model';
+import { CouponMetadataDto } from '../../coupon/dto/coupon.dto';
 import { Order, OrderStatusEnum } from '../order.model';
 
 export class GetOneOrderResDto {
@@ -24,12 +25,7 @@ export class GetOneOrderResDto {
     this.couponMetadata = null;
 
     if (order.couponMetadata) {
-      const couponMetadataDto: ICouponMetadataDto = {
-        ...order.couponMetadata.dataValues,
-        expiresAt: order.couponMetadata.getFormattedExpirationDate(),
-        createdAt: order.couponMetadata.getFormattedCreationDate(),
-      };
-      this.couponMetadata = couponMetadataDto;
+      this.couponMetadata = new CouponMetadataDto(order.couponMetadata);
     }
   }
 }
