@@ -25,7 +25,7 @@ export class CouponService extends CustomService {
     return CouponService.instance;
   }
 
-  async getOne(id: number) {
+  async getOne(id: number): Promise<GetOneCouponResDto> {
     try {
       const coupon = await this.couponModel.findByPk(id);
       if (!coupon) {
@@ -44,7 +44,7 @@ export class CouponService extends CustomService {
       console.log(couponDto);
       return couponDto;
     } catch (error) {
-      this.handleError(error, `Error fetching Coupon with ID ${id}`);
+      throw this.handleError(error, `Error fetching Coupon with ID ${id}`);
     }
   }
 
@@ -54,7 +54,9 @@ export class CouponService extends CustomService {
     amount: number;
     name: string;
     expire: number;
-  }) {
+  }): Promise<{
+    couponMetadata: CouponMetadata;
+  }> {
     const { transaction, orderId, amount, name, expire } = data;
 
     const couponMetadata = await this.couponMetadataModel.create(
@@ -142,7 +144,9 @@ export class CouponService extends CustomService {
     }
   }
 
-  async getCouponsByOrderId(orderId: number) {
+  async getCouponsByOrderId(orderId: number): Promise<{
+    coupons: Coupon[];
+  }> {
     const coupons = await this.couponModel.findAll({
       where: { orderId },
     });

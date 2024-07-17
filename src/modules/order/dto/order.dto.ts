@@ -3,6 +3,7 @@ import {
   ICouponMetadataDto,
   CouponMetadata,
 } from '../../coupon/model/coupon-metadata.model';
+import { Coupon } from '../../coupon/model/coupon.model';
 import { Order, OrderStatusEnum } from '../order.model';
 
 export class GetOneOrderResDto {
@@ -28,4 +29,11 @@ export class GetOneOrderResDto {
       this.couponMetadata = new CouponMetadataDto(order.couponMetadata);
     }
   }
+}
+
+export interface GetOrderWithCouponsRes {
+  order: GetOneOrderResDto;
+  coupons: {
+    coupons: Coupon[];
+  };
 }

@@ -24,6 +24,7 @@ export class Order extends Model<
   declare amount: number;
   declare status: OrderStatusEnum;
 
+  /**not used, 주문서 생성일자는 정확하는게 좋을듯해서 안쓰는중 */
   getFormattedOrderDate(): string {
     return dayjs(this.orderDate).format('YYYY-MM-DD');
   }

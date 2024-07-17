@@ -7,7 +7,7 @@ import {
 import { sequelize } from '../../config/database';
 import { Order, OrderStatusEnum } from './order.model';
 import { CouponService } from '../coupon/coupon.service';
-import { GetOneOrderResDto } from './dto/order.dto';
+import { GetOneOrderResDto, GetOrderWithCouponsRes } from './dto/order.dto';
 import { CouponMetadata } from '../coupon/model/coupon-metadata.model';
 
 export class OrderService extends CustomService {
@@ -28,7 +28,7 @@ export class OrderService extends CustomService {
     return OrderService.instance;
   }
 
-  async getAllOrders() {
+  async getAllOrders(): Promise<Order[]> {
     try {
       const orders = await this.orderModel.findAll();
       return orders;
@@ -37,7 +37,7 @@ export class OrderService extends CustomService {
     }
   }
 
-  async getOne(id: number) {
+  async getOne(id: number): Promise<GetOneOrderResDto> {
     try {
       const order = await this.orderModel.findByPk(id, {
         include: [
@@ -60,7 +60,7 @@ export class OrderService extends CustomService {
     }
   }
 
-  async getOrderWithCoupons(orderId: number) {
+  async getOrderWithCoupons(orderId: number): Promise<GetOrderWithCouponsRes> {
     try {
       const order = await this.orderModel.findByPk(orderId, {
         include: [

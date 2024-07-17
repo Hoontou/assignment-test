@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 import { OrderService } from './order.service';
 import { CustomController } from '../../common/custom-class';
+import { Order } from './order.model';
+import { GetOneOrderResDto, GetOrderWithCouponsRes } from './dto/order.dto';
 
 export class OrderController extends CustomController {
   private static instance: OrderController;
@@ -21,7 +23,7 @@ export class OrderController extends CustomController {
 
   async getAllOrders(req: Request, res: Response, next: NextFunction) {
     try {
-      const orders = await this.orderService.getAllOrders();
+      const orders: Order[] = await this.orderService.getAllOrders();
       res.status(200).json(orders);
     } catch (error) {
       this.handleResponseError(res, error);
@@ -30,7 +32,9 @@ export class OrderController extends CustomController {
 
   async getOrderById(req: Request, res: Response, next: NextFunction) {
     try {
-      const order = await this.orderService.getOne(Number(req.params.id));
+      const order: GetOneOrderResDto = await this.orderService.getOne(
+        Number(req.params.id)
+      );
       res.status(200).json(order);
     } catch (error) {
       this.handleResponseError(res, error);
@@ -48,9 +52,8 @@ export class OrderController extends CustomController {
 
   async getOrderWithCoupons(req: Request, res: Response, next: NextFunction) {
     try {
-      const result = await this.orderService.getOrderWithCoupons(
-        Number(req.params.id)
-      );
+      const result: GetOrderWithCouponsRes =
+        await this.orderService.getOrderWithCoupons(Number(req.params.id));
       res.status(200).json(result);
     } catch (error) {
       this.handleResponseError(res, error);
