@@ -15,4 +15,9 @@ router.patch('/:id/unavailable', validateGetOrderById, (req, res, next) =>
   couponController.markCouponAsUnavailable(req, res, next)
 );
 
+/** Mark coupon as unavailable By Order id */
+router.patch('/unavailable/order/:id', validateGetOrderById, (req, res, next) =>
+  couponController.markCouponsAsUnavailableByOrderId(req, res, next)
+);
+
 export const couponRouter: Router = router;
