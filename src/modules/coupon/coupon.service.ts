@@ -105,7 +105,7 @@ export class CouponService extends CustomService {
 
   async markCouponsAsUnavailableByOrderId(
     orderId: number
-  ): Promise<{ updatedCount: number }> {
+  ): Promise<{ updatedCount: number; orderId: number }> {
     const transaction = await sequelize.transaction();
 
     try {
@@ -132,7 +132,7 @@ export class CouponService extends CustomService {
       console.log(
         `* ${updatedCount} coupons for order ID ${orderId} marked as unavailable`
       );
-      return { updatedCount };
+      return { orderId, updatedCount };
     } catch (error) {
       await transaction.rollback();
       throw this.handleError(

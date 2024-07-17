@@ -42,13 +42,13 @@ All models were synchronized successfully.
 
 #### (localhost:3000/orders/:orderId)
 
-주문 getOneById(1)
+action: 주문 getOneById(1)
 
 ### 2. 주문 전체 조회 API
 
 #### GET localhost:3000/orders
 
-주문 getAll()
+action: 주문 getAll()
 
 ### 3. 주문과 쿠폰을 함께 조회 API
 
@@ -56,13 +56,13 @@ All models were synchronized successfully.
 
 #### (localhost:3000/orders/:orderId/coupons)
 
-주문 getOrderByIdWithCoupons(1)
+action: 주문 getOrderByIdWithCoupons(1)
 
 ### 4. 주문 API
 
 #### POST localhost:3000/orders
 
-주문 create()
+action: 주문 create()
 
 ```typescript
 body example {
@@ -86,7 +86,7 @@ body type {
 
 #### (localhost:3000/coupons/:couponId)
 
-쿠폰 getOne(1)
+action: 쿠폰 getOne(1)
 
 ### 6. 쿠폰 개별취소 API
 
@@ -94,7 +94,7 @@ body type {
 
 #### (localhost:3000/coupons/:couponId/unavailable)
 
-markCouponAsUnavailable(1)
+action: markCouponAsUnavailable(1)
 
 ### 7. 쿠폰 전체취소 API
 
@@ -102,4 +102,4 @@ markCouponAsUnavailable(1)
 
 #### (localhost:3000/coupons/unavailable/order/:orderId)
 
-markCouponsAsUnavailableByOrderId(1)
+action: markCouponsAsUnavailableByOrderId(1)
