@@ -5,10 +5,10 @@ import {
   NotFoundError,
 } from '../../common/custom-errors';
 import { sequelize } from '../../config/database';
-import { CouponMetadata } from '../coupon/coupon-metadata.model';
 import { Order, OrderStatusEnum } from './order.model';
 import { CouponService } from '../coupon/coupon.service';
 import { GetOneOrderResDto } from './dto/order.dto';
+import { CouponMetadata } from '../coupon/model/coupon-metadata.model';
 
 export class OrderService extends CustomService {
   private static instance: OrderService;
@@ -103,11 +103,12 @@ export class OrderService extends CustomService {
   }): Promise<{ newOrderId: number }> {
     const { userId, amount } = data;
 
-    const newOrder = await Order.create({
-      userId,
-      amount,
-      status: OrderStatusEnum.PENDING,
-    })
+    const newOrder = await this.orderModel
+      .create({
+        userId,
+        amount,
+        status: OrderStatusEnum.PENDING,
+      })
       .then((res) => {
         console.log(`* order created, id: ${res.id}`);
         return res;

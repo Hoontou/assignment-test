@@ -1,12 +1,12 @@
 import { Transaction } from 'sequelize';
-import { CouponMetadata } from './coupon-metadata.model';
-import { Coupon, CouponStatusEnum } from './coupon.model';
 import dayjs from 'dayjs';
 import { generatePin } from '../../common/generate-pin';
 import { BadRequestError, NotFoundError } from '../../common/custom-errors';
 import { CustomService } from '../../common/custom-class';
 import { GetOneCouponResDto } from './dto/coupon.dto';
 import { sequelize } from '../../config/database';
+import { CouponMetadata } from './model/coupon-metadata.model';
+import { Coupon, CouponStatusEnum } from './model/coupon.model';
 
 export class CouponService extends CustomService {
   private static instance: CouponService;

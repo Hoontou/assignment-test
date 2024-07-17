@@ -7,8 +7,8 @@ import {
   ForeignKey,
 } from 'sequelize';
 import dayjs from 'dayjs';
-import { sequelize } from '../../config/database';
-import { Order } from '../order/order.model';
+import { Order } from '../../order/order.model';
+import { sequelize } from '../../../config/database';
 
 export interface ICouponMetadataDto {
   id: number;

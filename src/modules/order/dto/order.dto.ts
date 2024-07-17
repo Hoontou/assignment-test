@@ -1,8 +1,8 @@
-import {
-  CouponMetadata,
-  ICouponMetadataDto,
-} from '../../coupon/coupon-metadata.model';
 import { CouponMetadataDto } from '../../coupon/dto/coupon.dto';
+import {
+  ICouponMetadataDto,
+  CouponMetadata,
+} from '../../coupon/model/coupon-metadata.model';
 import { Order, OrderStatusEnum } from '../order.model';
 
 export class GetOneOrderResDto {

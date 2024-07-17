@@ -2,7 +2,7 @@ import { Response } from 'express';
 import { CustomError, InternalServerError } from './custom-errors';
 
 class SingletonClass {
-  static getInstance(): SingletonClass {
+  static getInstance(...rest): SingletonClass {
     throw new Error('getInstance method must be implemented by subclass');
   }
 }

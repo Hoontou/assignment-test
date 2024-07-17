@@ -1,5 +1,8 @@
-import { CouponMetadata, ICouponMetadataDto } from '../coupon-metadata.model';
-import { Coupon, CouponStatusEnum } from '../coupon.model';
+import {
+  ICouponMetadataDto,
+  CouponMetadata,
+} from '../model/coupon-metadata.model';
+import { CouponStatusEnum, Coupon } from '../model/coupon.model';
 
 export class CouponMetadataDto implements ICouponMetadataDto {
   declare id: number;

@@ -5,7 +5,7 @@ import { orderRouter } from './modules/order/order.router';
 import { couponRouter } from './modules/coupon/coupon.router';
 import { httpLoggingInterceptor } from './common/http-logging.middleware';
 import { Order } from './modules/order/order.model';
-import { CouponMetadata } from './modules/coupon/coupon-metadata.model';
+import { CouponMetadata } from './modules/coupon/model/coupon-metadata.model';
 dotenv.config();
 
 const app: Application = express();
