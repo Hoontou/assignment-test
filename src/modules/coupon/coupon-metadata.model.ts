@@ -10,6 +10,14 @@ import dayjs from 'dayjs';
 import { sequelize } from '../../config/database';
 import { Order } from '../order/order.model';
 
+export interface ICouponMetadataDto {
+  id: number;
+  orderId: number;
+  name: string;
+  expiresAt: string;
+  createdAt: string;
+}
+
 export class CouponMetadata extends Model<
   InferAttributes<CouponMetadata>,
   InferCreationAttributes<CouponMetadata>
@@ -17,7 +25,7 @@ export class CouponMetadata extends Model<
   declare id: CreationOptional<number>;
   declare orderId: ForeignKey<Order['id']>;
   declare name: string;
-  declare expiresAt: Date;
+  declare expiresAt: Date | string;
   declare createdAt: CreationOptional<Date>;
 
   getFormattedExpirationDate(): string {
@@ -60,7 +68,7 @@ CouponMetadata.init(
   },
   {
     sequelize,
-    tableName: 'coupon_metadata',
+    tableName: 'coupon_metadatas',
     timestamps: false,
     underscored: true,
   }

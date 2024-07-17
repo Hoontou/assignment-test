@@ -57,7 +57,7 @@ Coupon.init(
   },
   {
     sequelize,
-    tableName: 'coupon',
+    tableName: 'coupons',
     timestamps: false,
     underscored: true,
   }

@@ -10,6 +10,7 @@ import { CouponMetadata } from '../coupon/coupon-metadata.model';
 import { Coupon } from '../coupon/coupon.model';
 import { Order, OrderStatusEnum } from './order.model';
 import { CouponService } from '../coupon/coupon.service';
+import { GetOneOrderResDto } from './dto/order.dto';
 
 export class OrderService extends CustomService {
   private static instance: OrderService;
@@ -51,8 +52,11 @@ export class OrderService extends CustomService {
       if (!order) {
         throw new NotFoundError(`Order with ID ${id} not found`);
       }
-      console.log(order);
-      return order;
+
+      const orderDto = new GetOneOrderResDto(order);
+      console.log(`Order ${id}`);
+      console.log(orderDto);
+      return orderDto;
     } catch (error) {
       this.handleError(error, `Error fetching order with ID ${id}`);
     }

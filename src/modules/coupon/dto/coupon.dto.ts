@@ -1,10 +1,10 @@
-import { CouponMetadata } from '../coupon-metadata.model';
+import { CouponMetadata, ICouponMetadataDto } from '../coupon-metadata.model';
 import { Coupon, CouponStatusEnum } from '../coupon.model';
 
 export class GetOneCouponResDto {
   declare id: number;
   declare pin: string;
-  declare couponMetadata: CouponMetadata;
+  declare couponMetadata: ICouponMetadataDto;
   declare status: CouponStatusEnum;
   declare orderId: number;
   declare usedAt: Date | null;
@@ -16,6 +16,11 @@ export class GetOneCouponResDto {
     this.status = status;
     this.orderId = orderId;
     this.usedAt = usedAt;
-    this.couponMetadata = couponMetadata;
+    const couponMetadataDto: ICouponMetadataDto = {
+      ...couponMetadata.dataValues,
+      expiresAt: couponMetadata.getFormattedExpirationDate(),
+      createdAt: couponMetadata.getFormattedCreationDate(),
+    };
+    this.couponMetadata = couponMetadataDto;
   }
 }

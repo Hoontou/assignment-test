@@ -27,7 +27,7 @@ app.listen(PORT, async () => {
     console.log('Connection has been established successfully.');
 
     Order.hasOne(CouponMetadata, {
-      foreignKey: 'couponMetadataId',
+      foreignKey: 'orderId',
       as: 'couponMetadata',
     });
     CouponMetadata.belongsTo(Order, {
@@ -36,7 +36,7 @@ app.listen(PORT, async () => {
     });
 
     await sequelize
-      .sync({ force: true })
+      .sync()
       .then(() => {
         console.log('All models were synchronized successfully.');
       })

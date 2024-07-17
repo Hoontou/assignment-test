@@ -38,7 +38,10 @@ export class CouponService extends CustomService {
         throw new NotFoundError(`Coupon with ID ${id}'s metadata not found`);
       }
 
-      return new GetOneCouponResDto(coupon, couponMetadata);
+      const couponDto = new GetOneCouponResDto(coupon, couponMetadata);
+      console.log(`Coupon ${id}`);
+      console.log(couponDto);
+      return couponDto;
     } catch (error) {
       this.handleError(error, `Error fetching Coupon with ID ${id}`);
     }
