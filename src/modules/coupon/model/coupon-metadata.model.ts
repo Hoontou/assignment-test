@@ -1,0 +1,75 @@
+import {
+  Model,
+  DataTypes,
+  CreationOptional,
+  InferAttributes,
+  InferCreationAttributes,
+  ForeignKey,
+} from 'sequelize';
+import dayjs from 'dayjs';
+import { Order } from '../../order/order.model';
+import { sequelize } from '../../../config/database';
+
+export interface ICouponMetadataDto {
+  id: number;
+  orderId: number;
+  name: string;
+  expiresAt: string;
+  createdAt: string;
+}
+
+export class CouponMetadata extends Model<
+  InferAttributes<CouponMetadata>,
+  InferCreationAttributes<CouponMetadata>
+> {
+  declare id: CreationOptional<number>;
+  declare orderId: ForeignKey<Order['id']>;
+  declare name: string;
+  declare expiresAt: Date | string;
+  declare createdAt: CreationOptional<Date>;
+
+  getFormattedExpirationDate(): string {
+    return dayjs(this.expiresAt).format('YYYY-MM-DD');
+  }
+
+  getFormattedCreationDate(): string {
+    return dayjs(this.createdAt).format('YYYY-MM-DD');
+  }
+}
+
+CouponMetadata.init(
+  {
+    id: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    orderId: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: false,
+      references: {
+        model: Order,
+        key: 'id',
+      },
+    },
+    name: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+    },
+    expiresAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
+  },
+  {
+    sequelize,
+    tableName: 'coupon_metadatas',
+    timestamps: false,
+    underscored: true,
+  }
+);
